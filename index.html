@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Especial</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fce4ec;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        .carta {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 850px;
+            border-radius: 15px;
+            box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+        }
+        .carta img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            transition: transform 0.3s ease-in-out;
+            border-radius: 15px;
+        }
+        .mensaje {
+            margin-top: 10px;
+            font-size: 20px;
+            color: #d81b60;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .carta:hover {
+            transform: scale(1.05);
+        }
+        .carta img:hover {
+            transform: rotate(10deg);
+        }
+
+        /* Estilo para los botones */
+        .boton-container {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .boton {
+            background: linear-gradient(45deg, #ff6f61, #ffab91);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-in-out;
+            margin: 10px 0;
+        }
+        .boton:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        .boton:focus {
+            outline: none;
+        }
+
+        /* Estilo para el nuevo botón que aparece después de 20 clics */
+        .boton-nuevo {
+            background: linear-gradient(45deg, #42a5f5, #2196f3);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* Inicialmente oculto */
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Animación de rebote para el mensaje final */
+        .mensaje-seleccionado {
+            font-size: 24px;
+            color: #42a5f5;
+            font-weight: bold;
+            margin-top: 20px;
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+            position: absolute;
+            top: 20%; /* Posición vertical del mensaje en la parte superior de la pantalla */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .mensaje-seleccionado.show {
+            opacity: 1;
+            transform: translateY(0) translateX(-50%);
+        }
+
+        .mensaje-seleccionado.final-message {
+            font-size: 30px;
+            color: #FF4081;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: bounce 1s ease-in-out;
+        }
+
+        /* Animación de rebote para el mensaje final */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Estilo para los botones al crecer */
+        .boton-creciendo {
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Media queries para dispositivos pequeños */
+        @media screen and (max-width: 600px) {
+            .boton {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+            .boton-nuevo {
+                padding: 15px 40px;
+                font-size: 18px;
+            }
+            .mensaje {
+                font-size: 18px;
+            }
+            .carta img {
+                width: 90%;
+                max-width: none;
+            }
+        }
+
+        /* Estilos adicionales para mejorar la simetría en dispositivos móviles */
+        @media screen and (max-width: 500px) {
+            .carta {
+                padding: 15px;
+            }
+            .mensaje {
+                font-size: 18px;
+            }
+            .boton {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            .boton-nuevo {
+                padding: 15px 35px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="carta" id="carta">
+        <img src="https://cdn.buymeacoffee.com/uploads/rewards/2025-03-10/1/165348_Code_1.gif" alt="Flores Amarillas y Conejitos" loading="eager" id="imagen">
+        <div class="mensaje" id="mensaje">Te envío flores amarillas y conejitos llenos de amor 🐰🌻</div>
+
+        <!-- Botones -->
+        <div class="boton-container">
+            <button class="boton" id="boton-gano-yo">Presiona este botón si yo gano en amarte más</button>
+            <button class="boton" id="boton-gano-tu">Presiona este botón si tú ganas en amarme más</button>
+        </div>
+
+        <!-- Nuevo botón que aparecerá después de 20 clics -->
+        <button class="boton-nuevo" id="boton-final">¡Presiona este botón para el mensaje final!</button>
+
+        <!-- Mensaje de selección -->
+        <div class="mensaje-seleccionado" id="mensaje-seleccionado"></div>
+    </div>
+
+    <script>
+        // Variables de los botones y mensajes
+        const botonGanoTu = document.getElementById("boton-gano-tu");
+        const botonGanoYo = document.getElementById("boton-gano-yo");
+        const botonFinal = document.getElementById("boton-final");
+        const mensajeSeleccionado = document.getElementById("mensaje-seleccionado");
+
+        // Variables de control
+        let contador = 0;
+        let mensajeMostrado = false;
+
+        // Función para el crecimiento del botón "gano tú"
+        botonGanoTu.addEventListener("click", () => {
+            // Asegurarse de que el botón de "yo gano" no haya sido presionado
+            if (mensajeMostrado) return;
+
+            contador++;
+            botonGanoTu.classList.add("boton-creciendo");
+            botonGanoTu.style.transform = `scale(${1 + contador / 20})`;
+
+            if (contador >= 20) {
+                // Cuando el botón de "tú" alcanza los 20 clics, no hace nada, solo se hace más grande
+                botonGanoTu.style.transform = "scale(10)";
+                botonGanoTu.textContent = "¡Lo lograste! El botón ahora cubre la pantalla 🎉";
+
+                // Mostrar el nuevo botón
+                botonFinal.style.display = "block";
+            }
+        });
+
+        // Cuando presionan el botón de "yo gano"
+        botonGanoYo.addEventListener("click", () => {
+            // Mostrar el mensaje final y hacer que se vea
+            mensajeSeleccionado.textContent = "Aww ya ves no fue tan difícil 😏";
+            mensajeSeleccionado.classList.add("show");
+            mensajeSeleccionado.classList.add("final-message");
+
+            // Después de mostrar el mensaje, bloquear interacción y resetear la escala del botón
+            mensajeMostrado = true;
+            botonGanoTu.disabled = true; // Deshabilitar el botón "gano tú"
+            botonGanoTu.style.transform = "scale(1)";
+            botonGanoTu.textContent = "Presiona y admite que yo te amo más";
+        });
+
+        // Cuando presionan el botón final después de 20 clics
+        botonFinal.addEventListener("click", () => {
+            // Mostrar el mensaje final
+            mensajeSeleccionado.textContent = "Aww ya ves no fue tan difícil 😏";
+            mensajeSeleccionado.classList.add("show");
+            mensajeSeleccionado.classList.add("final-message");
+
+            // Bloquear interacción con los botones
+            mensajeMostrado = true;
+            botonGanoTu.disabled = true;
+            botonGanoYo.disabled = true;
+            botonFinal.disabled = true; // Deshabilitar el botón final después de presionar
+        });
+    </script>
+</body>
+</html>
